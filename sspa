@@ -14,12 +14,12 @@ function check_python() {
 }
 
 function check_aws() {
-  if ! which aws > /dev/null; then
+  if ! which aws2 > /dev/null; then
     echo "Can't find AWS CLI. Install 'awscli' using pip."
     exit 1
   fi
-  if ! aws configure list --profile $profile > /dev/null; then
-    echo "Run \`aws configure --profile $profile\` to create it"
+  if ! aws2 configure list --profile $profile > /dev/null; then
+    echo "Run \`aws2 configure --profile $profile\` to create it"
     exit 1
   fi
 }
@@ -36,7 +36,7 @@ function dev_server() {
   ret=`python -c 'import sys; print("%i" % (sys.hexversion<0x03000000))'`
   if [ $ret -eq 0 ]; then
     exec python -m http.server 9292
-  else 
+  else
     exec python -m SimpleHTTPServer 9292
   fi
 }
@@ -52,8 +52,8 @@ function create_s3_bucket() {
   local bucket_path=conf/s3/${bucket_name}
   # The s3 command doesn't output JSON :-/
   if [[ ! -e ${bucket_path}/endpoint.txt ]]; then
-    aws --profile $profile s3 mb $bucket_uri && mkdir -p ${bucket_path}
-    local region=$(aws --profile $profile configure get region)
+    aws2 --profile $profile s3 mb $bucket_uri && mkdir -p ${bucket_path}
+    local region=$(aws2 --profile $profile configure get region)
     local endpoint="http://${1}.s3-website-${region}.amazonaws.com"
     echo "$endpoint" > ${bucket_path}/endpoint.txt
     echo "Website endpoint is: $endpoint"
@@ -63,7 +63,7 @@ function create_s3_bucket() {
 function webify_bucket() {
   local bucket_name=$1
   local bucket_uri="s3://${bucket_name}"
-  aws --profile $profile s3 website \
+  aws2 --profile $profile s3 website \
     --index-document index.html \
     --error-document error.html \
     $bucket_uri
@@ -75,7 +75,7 @@ function deploy_s3_bucket() {
     bucket_name=$(basename $bucket_name)
   fi
   local bucket_uri="s3://${1}"
-  aws --profile $profile s3 sync public/ $bucket_uri --acl public-read
+  aws2 --profile $profile s3 sync public/ $bucket_uri --acl public-read
 }
 
 function generate_assume_role_policy() {
@@ -140,7 +140,7 @@ function create_cognito_auth_role() {
     local role_name="${pool_name}_cognito_authenticated"
     echo "Creaing role: $role_name"
     # Might be able to use the create_iam_role function for this
-    aws --profile $profile iam create-role \
+    aws2 --profile $profile iam create-role \
       --role-name "$role_name" \
       --assume-role-policy-document "file://${identity_pool_dir}/assume_role_policy.json" \
       > ${identity_pool_dir}/role_info.json
@@ -158,7 +158,7 @@ function create_identity_pool() {
   local identity_pool_name=$(basename $identity_pool_dir)
   if [[ ! -s ${identity_pool_dir}/pool_info.json ]]; then
     echo "Creating identity pool: $identity_pool_name"
-    aws --profile $profile cognito-identity create-identity-pool \
+    aws2 --profile $profile cognito-identity create-identity-pool \
       --identity-pool-name $identity_pool_name \
       --cli-input-json "file://${identity_pool_dir}/config.json" \
       > ${identity_pool_dir}/pool_info.json
@@ -168,7 +168,7 @@ function create_identity_pool() {
   local pool_id=$(support/jsed.py ${identity_pool_dir}/pool_info.json 'IdentityPoolId')
   local role_arn=$(support/jsed.py ${identity_pool_dir}/role_info.json 'Role.Arn')
   echo "Updating identity pool roles"
-  aws --profile $profile cognito-identity set-identity-pool-roles \
+  aws2 --profile $profile cognito-identity set-identity-pool-roles \
     --identity-pool-id ${pool_id} \
     --roles authenticated=${role_arn}
 }
@@ -178,15 +178,15 @@ function create_table() {
   local table_name=$(basename $table_dir)
   local role_name="${2}_cognito_authenticated"
   if [[ ! -s ${table_dir}/table_info.json ]]; then
-    aws --profile $profile dynamodb create-table \
+    aws2 --profile $profile dynamodb create-table \
       --table-name $table_name \
       --cli-input-json "file://${table_dir}/config.json" \
       > ${table_dir}/table_info.json
 
     echo -n "Waiting for table creation..."
-    aws --profile $profile dynamodb describe-table --table-name "$table_name" > ${table_dir}/table_info.json
+    aws2 --profile $profile dynamodb describe-table --table-name "$table_name" > ${table_dir}/table_info.json
     while [[ "$(support/jsed.py ${table_dir}/table_info.json 'Table.TableStatus')" != "ACTIVE" ]]; do
-      aws --profile $profile dynamodb describe-table --table-name "$table_name" > ${table_dir}/table_info.json
+      aws2 --profile $profile dynamodb describe-table --table-name "$table_name" > ${table_dir}/table_info.json
       echo -n .
     done
     echo "...done!"
@@ -194,7 +194,7 @@ function create_table() {
 
   local table_arn=$(support/jsed.py ${table_dir}/table_info.json 'Table.TableArn')
   generate_table_policy ${table_arn} > ${table_dir}/role_policy.json
-  aws --profile $profile iam put-role-policy \
+  aws2 --profile $profile iam put-role-policy \
     --policy-document file://${table_dir}/role_policy.json \
     --role-name ${role_name} \
     --policy-name ${table_name}_table_access
@@ -219,7 +219,7 @@ function build_bundle() {
 
 function deploy_bundle {
   for fn in `ls conf/lambda/functions`; do
-    aws --profile $profile lambda update-function-code \
+    aws2 --profile $profile lambda update-function-code \
       --function-name $fn \
       --zip-file "fileb://services/archive.zip" > conf/lambda/functions/$fn/info.json
   done
@@ -242,7 +242,7 @@ function create_iam_role() {
   local policy_document=$2
   mkdir -p $role_dir
   if [[ ! -e ${role_dir}/info.json ]]; then
-    aws --profile $profile iam create-role \
+    aws2 --profile $profile iam create-role \
       --role-name "$role_name" \
       --assume-role-policy-document "${policy_document}" \
       > ${role_dir}/info.json
@@ -255,13 +255,13 @@ function create_lambda_service() {
   create_iam_role lambda_exec "file://conf/iam/policies/lambda_trust.json"
   echo -n "Waiting for IAM Role to become available..."
   local role_arn=$(support/jsed.py conf/iam/roles/${app_name}_lambda_exec/info.json 'Role.Arn')
-  while ! aws --profile $profile iam get-role --role-name ${app_name}_lambda_exec &> /dev/null; do
+  while ! aws2 --profile $profile iam get-role --role-name ${app_name}_lambda_exec &> /dev/null; do
     echo -n .
   done
   sleep 5 # See issue #17
   echo "...done!"
   if [[ ! -e ${service_dir}/info.json ]]; then
-    aws --profile $profile lambda create-function \
+    aws2 --profile $profile lambda create-function \
       --function-name ${function_name} \
       --role ${role_arn} \
       --runtime nodejs4.3 \
@@ -276,9 +276,9 @@ function help() {
   echo "#################################################"
   echo "# Serverless Single Page Apps - The Bash Helper #"
   echo "#################################################"
-  echo 
+  echo
   echo "Usage: sspa <action> [arguments...]"
-  echo 
+  echo
   echo "Where <action> is one of:"
   echo "    server"
   echo "    liveserver"
@@ -291,7 +291,7 @@ function help() {
   echo "    deploy_bundle"
   echo "    create_service <config file>"
   #echo "    create_gateway <config_file> <service> - Attach an API Gateway to a service"
-  echo 
+  echo
 }
 
 action=${1:-"help"}
@@ -349,7 +349,7 @@ case "$action" in
     if [[ $# -eq 2 ]]; then
       create_identity_pool ${2}
     else
-      echo "Please specify a Cognito identity pool configuration directory" 
+      echo "Please specify a Cognito identity pool configuration directory"
       exit 1
     fi
     ;;
@@ -359,7 +359,7 @@ case "$action" in
     if [[ $# -eq 3 ]]; then
       create_table ${2} ${3}
     else
-      echo "Please specify a DynamoDB table configuration directory and identity pool name" 
+      echo "Please specify a DynamoDB table configuration directory and identity pool name"
       exit 1
     fi
     ;;
@@ -370,7 +370,7 @@ case "$action" in
       build_bundle
       create_lambda_service ${2}
     else
-      echo "Please specify a Lambda config directory" 
+      echo "Please specify a Lambda config directory"
       exit 1
     fi
     ;;
