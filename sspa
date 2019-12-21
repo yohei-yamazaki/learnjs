@@ -53,12 +53,15 @@ function webify_bucket() {
 }
 
 function deploy_s3_bucket() {
+  cd public # Reactプロジェクトに移動
+  yarn run build # Reactを本番ビルド
+  cd ../
   local bucket_name=$1
   if [[ -d ${1} ]]; then
     bucket_name=$(basename $bucket_name)
   fi
   local bucket_uri="s3://${1}"
-  aws2 --profile $profile s3 sync public/ $bucket_uri --acl public-read
+  aws2 s3 sync ./public/build $bucket_uri --acl public-read --exclude "*.DS_Store" --profile $profile # Reactの本番ビルドファイルのpublic/buildをS3にアップロード
 }
 
 function generate_assume_role_policy() {
