@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Container, Grid, Header } from "semantic-ui-react";
+import React from 'react';
+import { Button, Container, Grid, Header } from 'semantic-ui-react';
 
 type Props = {};
 
@@ -13,7 +13,7 @@ const LandingPage: React.FC<Props> = () => {
             <Button>Learn React</Button>
           </Grid.Column>
           <Grid.Column width={8}>
-            <img src="../../../logo512.png" />
+            <img src="../../../logo512.png" alt="logo" />
           </Grid.Column>
         </Grid.Row>
       </Grid>
