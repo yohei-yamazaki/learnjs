@@ -1,23 +1,24 @@
 import React from "react";
+import { Button, Container, Grid, Header } from "semantic-ui-react";
 
-const App: React.FC = () => {
+type Props = {};
+
+const LandingPage: React.FC<Props> = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Grid>
+        <Grid.Row>
+          <Grid.Column width={8} verticalAlign="bottom">
+            <Header as="h2">Learn JavaScript, one puzzle at a time.</Header>
+            <Button>Learn React</Button>
+          </Grid.Column>
+          <Grid.Column width={8}>
+            <img src="../../../logo512.png" />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Container>
   );
 };
 
-export default App;
+export default LandingPage;
