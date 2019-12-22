@@ -7,7 +7,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:eslint-config-airbnb',
+    'airbnb',
   ],
   globals: {
     Atomics: 'readonly',
