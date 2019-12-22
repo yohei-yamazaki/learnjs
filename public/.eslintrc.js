@@ -21,6 +21,20 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
+      },
+    },
+  },
+  rules: {
+    'react/jsx-filename-extension': [
+      1,
+      { extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'] },
+    ],
+    'arrow-body-style': 'off',
+    'object-curly-newline': 'off',
+  },
   plugins: ['react', '@typescript-eslint'],
-  rules: {},
 };
