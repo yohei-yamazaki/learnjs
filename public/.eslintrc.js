@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
+    'jest/globals': true,
   },
   extends: [
     'eslint:recommended',
@@ -36,5 +37,5 @@ module.exports = {
     'arrow-body-style': 'off',
     'object-curly-newline': 'off',
   },
-  plugins: ['react', '@typescript-eslint'],
+  plugins: ['react', '@typescript-eslint', 'jest'],
 };
