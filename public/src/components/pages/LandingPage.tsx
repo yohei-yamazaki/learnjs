@@ -10,7 +10,7 @@ const LandingPage: React.FC<Props> = () => {
         <Grid.Row>
           <Grid.Column width={8} verticalAlign="bottom">
             <Header as="h2">Learn JavaScript, one puzzle at a time.</Header>
-            <Button>Learn React</Button>
+            <Button>Start Now!</Button>
           </Grid.Column>
           <Grid.Column width={8}>
             <img src="../../../logo512.png" alt="logo" />
