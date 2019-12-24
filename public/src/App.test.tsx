@@ -1,9 +1,13 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { createHashHistory } from 'history';
 import App from './App';
 
 test('render Problem view', () => {
-  const { container, getByText } = render(<App />);
-  fireEvent.click(getByText(/Start Now!/i));
+  const history = createHashHistory();
+  history.push('/problem');
+  const { container } = render(
+    <App />,
+  );
   expect(container.innerHTML).toMatch('Coming soon!');
 });
