@@ -11,11 +11,12 @@ test('render landing page when there is no hash', () => {
   expect(history.location.pathname).toBe('/');
 });
 
-test('render Problem view', () => {
+test('render Problem view with Problem Id', () => {
   const history = createHashHistory();
-  history.push('/problem');
-  const { container } = render(
+  history.push('/problem/5');
+  const { getByText } = render(
     <App />,
   );
-  expect(container.innerHTML).toMatch('Coming soon!');
+  const ProblemNumber = getByText(/Problem:5/i);
+  expect(ProblemNumber).toBeInTheDocument();
 });
