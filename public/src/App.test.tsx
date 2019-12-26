@@ -17,6 +17,6 @@ test('render Problem view with Problem Id', () => {
   const { getByText } = render(
     <App />,
   );
-  const ProblemNumber = getByText(/Problem:5/i);
+  const ProblemNumber = getByText(/Problem #5/i);
   expect(ProblemNumber).toBeInTheDocument();
 });

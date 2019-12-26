@@ -12,5 +12,5 @@ test('renders Start Now! text', () => {
 test('renders Problem1 page', () => {
   const { getByText, container } = render(<App />);
   fireEvent.click(getByText(/Start Now!/i));
-  expect(container.innerHTML).toMatch('Problem:1');
+  expect(container.innerHTML).toMatch('Problem #1');
 });
