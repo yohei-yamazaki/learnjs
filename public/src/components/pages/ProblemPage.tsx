@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Header } from 'semantic-ui-react';
 import { RouteComponentProps } from 'react-router-dom';
 import ProblemTitle from '../atoms/ProblemTitle';
@@ -19,8 +19,12 @@ const problems: {id: string, description: string, code: string}[] = [
 type Props = {} & RouteComponentProps<{id: string}>;
 
 const ProblemPage: React.FC<Props> = (props) => {
+  const [problem, setProblem] = useState<typeof problems[number] | null>(null);
   const { match } = props;
   const { id } = match.params;
+  useEffect(() => {
+    setProblem(problems.find((item) => item.id === id) ?? null);
+  }, [id]);
   return (
     <Container>
       <ProblemTitle problemNumber={id} />
