@@ -36,6 +36,7 @@ module.exports = {
     ],
     'arrow-body-style': 'off',
     'object-curly-newline': 'off',
+    'react/prop-types': 'off',
   },
   plugins: ['react', '@typescript-eslint', 'jest'],
 };
