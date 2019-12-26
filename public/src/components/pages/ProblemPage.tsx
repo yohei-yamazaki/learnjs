@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from 'semantic-ui-react';
 import { RouteComponentProps } from 'react-router-dom';
-import ProblemTitle from '../atoms/ProblemTitle';
+import ProblemTitle from '../atoms/titles/ProblemTitle';
+import ProblemBody from '../molecules/body/ProblemBody';
 
 
 export type Problem = {
@@ -35,12 +36,9 @@ const ProblemPage: React.FC<Props> = (props) => {
   return (
     <Container>
       <ProblemTitle problemNumber={id} />
-      {problem ? (
-        <div>
-          <Header as="h3">{problem.description}</Header>
-          <pre>{problem.code}</pre>
-        </div>
-      ) : null}
+      {problem
+        ? <ProblemBody problem={problem} />
+        : null}
     </Container>
   );
 };
