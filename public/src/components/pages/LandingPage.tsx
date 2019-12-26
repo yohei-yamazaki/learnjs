@@ -12,7 +12,7 @@ const LandingPage: React.FC<Props> = (props) => {
         <Grid.Row>
           <Grid.Column width={8} verticalAlign="bottom">
             <Header as="h2">Learn JavaScript, one puzzle at a time.</Header>
-            <Button onClick={() => { history.push('/problem'); }}>Start Now!</Button>
+            <Button onClick={() => { history.push('/problem/1'); }}>Start Now!</Button>
           </Grid.Column>
           <Grid.Column width={8}>
             <img src="../../../logo512.png" alt="logo" />
