@@ -28,6 +28,12 @@ const ProblemPage: React.FC<Props> = (props) => {
   return (
     <Container>
       <ProblemTitle problemNumber={id} />
+      {problem ? (
+        <div>
+          <Header as="h3">{problem.description}</Header>
+          <pre>{problem.code}</pre>
+        </div>
+      ) : null}
     </Container>
   );
 };
