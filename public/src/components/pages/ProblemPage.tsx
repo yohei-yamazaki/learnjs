@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Header } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import { RouteComponentProps } from 'react-router-dom';
 import ProblemTitle from '../atoms/ProblemTitle';
 
-const problems: {id: string, description: string, code: string}[] = [
+
+export type Problem = {
+ id: string,
+ description: string,
+ code: string
+}
+
+const problems: Problem[] = [
   {
     id: '1',
     description: 'What is truth?',
@@ -19,7 +26,7 @@ const problems: {id: string, description: string, code: string}[] = [
 type Props = {} & RouteComponentProps<{id: string}>;
 
 const ProblemPage: React.FC<Props> = (props) => {
-  const [problem, setProblem] = useState<typeof problems[number] | null>(null);
+  const [problem, setProblem] = useState<Problem | null>(null);
   const { match } = props;
   const { id } = match.params;
   useEffect(() => {
