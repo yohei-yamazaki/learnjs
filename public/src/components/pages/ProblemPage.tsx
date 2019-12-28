@@ -34,27 +34,25 @@ type Props = {} & RouteComponentProps<{id: string}>;
 const ProblemPage: React.FC<Props> = (props) => {
   const [problem, setProblem] = useState<Problem | null>(null);
   const [checkAnswer, setCheckAnswer] = useState('');
-  const { match } = props;
+  const [loading, setLoading] = useState(false);
+  const { match, history } = props;
   const { id } = match.params;
-  useEffect(() => {
-    setProblem(problems.find((item) => item.id === id) ?? null);
-  }, [id]);
 
   const onCheckAnswer = async (values: Answer) => {
-    if (values.answer === 'true') {
-      return 'Correct!';
-    }
+    if (values.answer === 'true') return 'Correct!';
     return 'Wrong';
   };
+
 
   const formik = useFormik<Answer>({
     initialValues: {
       answer: '',
     },
     onSubmit: async (values) => {
-      setCheckAnswer('');
+      setLoading(true);
       const check = await onCheckAnswer(values);
       setCheckAnswer(check);
+      setLoading(false);
     },
     validateOnChange: false,
     validate: (value) => {
@@ -65,8 +63,14 @@ const ProblemPage: React.FC<Props> = (props) => {
       }
       return errors;
     },
-
   });
+
+  useEffect(() => {
+    setProblem(problems.find((item) => item.id === id) ?? null);
+    setCheckAnswer('');
+    formik.resetForm({});
+  }, [id]);
+
   return (
     <Container>
       <ProblemTitle problemNumber={id} />
@@ -74,13 +78,21 @@ const ProblemPage: React.FC<Props> = (props) => {
         ? <ProblemBody problem={problem} />
         : null}
       <Form>
-        <Form.Field error={formik.errors.answer} control={Input} onChange={formik.handleChange('answer') as ()=>{}} />
+        <Form.Field error={formik.errors.answer} value={formik.values.answer} control={Input} onChange={formik.handleChange('answer') as () => {}} />
         <Form.Field control={Button} onClick={formik.handleSubmit as () => {}}>
           CHECK ANSWER
         </Form.Field>
-        <Transition visible={!!checkAnswer} animation="scale" duration={500}>
-          <Header as="h3">{checkAnswer}</Header>
+        <Transition visible={!loading} animation="scale" duration={500}>
+          <Header color={checkAnswer === 'Correct!' ? 'blue' : 'red'} as="h3">{checkAnswer}</Header>
         </Transition>
+        {checkAnswer === 'Correct!' && (
+        <Button onClick={() => {
+          history.push(`${Number(id) + 1}`);
+        }}
+        >
+          Next Problem!
+        </Button>
+        )}
       </Form>
     </Container>
   );
