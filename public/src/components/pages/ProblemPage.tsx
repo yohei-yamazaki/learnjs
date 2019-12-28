@@ -7,9 +7,9 @@ import ProblemBody from '../molecules/body/ProblemBody';
 
 
 export type Problem = {
- id: string,
- description: string,
- code: string
+  id: string,
+  description: string,
+  code: string
 }
 
 const problems: Problem[] = [
