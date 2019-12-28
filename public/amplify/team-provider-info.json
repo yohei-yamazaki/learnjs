@@ -1,0 +1,15 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-learnjs-dev-200558-authRole",
+            "UnauthRoleArn": "arn:aws:iam::611644174665:role/amplify-learnjs-dev-200558-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::611644174665:role/amplify-learnjs-dev-200558-authRole",
+            "Region": "ap-northeast-1",
+            "DeploymentBucketName": "amplify-learnjs-dev-200558-deployment",
+            "UnauthRoleName": "amplify-learnjs-dev-200558-unauthRole",
+            "StackName": "amplify-learnjs-dev-200558",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:611644174665:stack/amplify-learnjs-dev-200558/0757cd70-2962-11ea-9b4b-0a238b45858e",
+            "AmplifyAppId": "d2xm7m92pant4b"
+        }
+    }
+}
