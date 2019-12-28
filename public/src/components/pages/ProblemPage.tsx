@@ -33,25 +33,35 @@ type Props = {} & RouteComponentProps<{id: string}>;
 
 const ProblemPage: React.FC<Props> = (props) => {
   const [problem, setProblem] = useState<Problem | null>(null);
+  const [checkAnswer, setCheckAnswer] = useState('');
   const { match } = props;
   const { id } = match.params;
   useEffect(() => {
     setProblem(problems.find((item) => item.id === id) ?? null);
   }, [id]);
 
+  const onCheckAnswer = async (values: Answer) => {
+    if (values.answer === 'true') {
+      return 'Correct!';
+    }
+    return 'Wrong';
+  };
+
   const formik = useFormik<Answer>({
     initialValues: {
       answer: '',
     },
-    onSubmit: (values) => {
-      alert('correct!');
+    onSubmit: async (values) => {
+      setCheckAnswer('');
+      const check = await onCheckAnswer(values);
+      setCheckAnswer(check);
     },
     validateOnChange: false,
     validate: (value) => {
       const errors: FormikErrors<Answer> = {};
       const { answer } = value;
       if (!answer) {
-        errors.answer = 'wrong';
+        errors.answer = 'required';
       }
       return errors;
     },
