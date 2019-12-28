@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from 'semantic-ui-react';
 import { RouteComponentProps } from 'react-router-dom';
+import { useFormik, FormikErrors } from 'formik';
 import ProblemTitle from '../atoms/titles/ProblemTitle';
 import ProblemBody from '../molecules/body/ProblemBody';
 
@@ -24,6 +25,10 @@ const problems: Problem[] = [
   },
 ];
 
+type Answer = {
+  answer: string
+}
+
 type Props = {} & RouteComponentProps<{id: string}>;
 
 const ProblemPage: React.FC<Props> = (props) => {
@@ -33,6 +38,25 @@ const ProblemPage: React.FC<Props> = (props) => {
   useEffect(() => {
     setProblem(problems.find((item) => item.id === id) ?? null);
   }, [id]);
+
+  const formik = useFormik<Answer>({
+    initialValues: {
+      answer: '',
+    },
+    onSubmit: (values) => {
+      alert('correct!');
+    },
+    validateOnChange: false,
+    validate: (value) => {
+      const errors: FormikErrors<Answer> = {};
+      const { answer } = value;
+      if (!answer) {
+        errors.answer = 'wrong';
+      }
+      return errors;
+    },
+
+  });
   return (
     <Container>
       <ProblemTitle problemNumber={id} />
