@@ -1,1 +1,9 @@
-{}
+{
+	"auth": {
+		"learnjsca8a5781": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}

@@ -10,6 +10,13 @@
             "StackName": "amplify-learnjs-dev-200558",
             "StackId": "arn:aws:cloudformation:ap-northeast-1:611644174665:stack/amplify-learnjs-dev-200558/0757cd70-2962-11ea-9b4b-0a238b45858e",
             "AmplifyAppId": "d2xm7m92pant4b"
+        },
+        "categories": {
+            "auth": {
+                "learnjsca8a5781": {
+                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Facebook\",\"client_id\":\"555206208364148\",\"client_secret\":\"114dcfc8650744dd07f3f1c90d61c5c1\"},{\"ProviderName\":\"Google\",\"client_id\":\"927342777757-9fl2el7e788bb5lcqrv2s2iorddqs463.apps.googleusercontent.com\",\"client_secret\":\"iaF7VQdALq9Hge23ReCTEIvO\"}]"
+                }
+            }
         }
     }
 }
