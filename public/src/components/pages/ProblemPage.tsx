@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container } from 'semantic-ui-react';
+import { Container, Input, Button, Form, Transition, Header } from 'semantic-ui-react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useFormik, FormikErrors } from 'formik';
 import ProblemTitle from '../atoms/titles/ProblemTitle';
@@ -73,6 +73,15 @@ const ProblemPage: React.FC<Props> = (props) => {
       {problem
         ? <ProblemBody problem={problem} />
         : null}
+      <Form>
+        <Form.Field error={formik.errors.answer} control={Input} onChange={formik.handleChange('answer') as ()=>{}} />
+        <Form.Field control={Button} onClick={formik.handleSubmit as () => {}}>
+          CHECK ANSWER
+        </Form.Field>
+        <Transition visible={!!checkAnswer} animation="scale" duration={500}>
+          <Header as="h3">{checkAnswer}</Header>
+        </Transition>
+      </Form>
     </Container>
   );
 };
