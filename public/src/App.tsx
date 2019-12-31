@@ -10,12 +10,15 @@ const App: React.FC = () => {
   const [user, setUser] = useState(null);
   useEffect(() => {
     Hub.listen('auth', ({ payload: { event, data } }) => {
+      // eslint-disable-next-line
       switch (event) {
         case 'signIn':
           setUser(data);
+          console.log('signed in');
           break;
-        default:
+        case 'signOut':
           setUser(null);
+          console.log('Not signed in');
           break;
       }
     });
