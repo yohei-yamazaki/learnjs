@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { Container, Input, Button, Form, Loader } from 'semantic-ui-react';
+import { Container, Input, Button, Form, Loader, Icon } from 'semantic-ui-react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useFormik, FormikErrors } from 'formik';
 import { Auth } from 'aws-amplify';
+import SocialLoginButton from '../atoms/Buttons/SocialLoginButton';
+
+export enum CognitoHostedUIIdentityProvider {
+    Cognito = 'COGNITO',
+    Google = 'Google',
+    Facebook = 'Facebook',
+    Amazon = 'LoginWithAmazon',
+}
 
 type SignUpValues = {
   email: string
@@ -51,6 +59,16 @@ const SignInPage: React.FC<Props> = (props) => {
           </Form.Field>
         </Form>
         <Button onClick={() => history.push('/signup')}>新規登録へ</Button>
+        <Button color="google plus" onClick={() => Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Google })}>
+          <Icon name="google plus" />
+          Google+
+        </Button>
+        <Button color="facebook" onClick={() => Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Facebook })}>
+          <Icon name="facebook" />
+          facebook
+        </Button>
+
+        {/* <SocialLoginButton /> */}
       </Container>
       { loading && <Loader content="Loading" />}
     </>
