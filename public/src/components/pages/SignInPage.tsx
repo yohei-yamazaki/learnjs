@@ -3,7 +3,6 @@ import { Container, Input, Button, Form, Loader, Icon } from 'semantic-ui-react'
 import { RouteComponentProps } from 'react-router-dom';
 import { useFormik, FormikErrors } from 'formik';
 import { Auth } from 'aws-amplify';
-import SocialLoginButton from '../atoms/Buttons/SocialLoginButton';
 
 export enum CognitoHostedUIIdentityProvider {
     Cognito = 'COGNITO',
